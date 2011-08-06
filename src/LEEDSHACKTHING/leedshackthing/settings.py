@@ -100,15 +100,18 @@ INSTALLED_APPS = (
 
 ROOT_URLCONF = 'leedshackthing.urls'
 
+DATA_URLS = {
+    'currentroad': 'http://datex2.tistrafficinfo.com/England/CurrentPlanned/content.xml'
+    }
+
+TRAFFIC_USERNAME = 'twardill'
+TRAFFIC_PASSWORD = ''
+LOCAL_DATA = False
+
 # Override with environment specific settings
 try:
     from local_settings import *
 except ImportError:
     pass
 
-DATA_URLS = {
-    'currentroad': 'http://datex2.tistrafficinfo.com/England/CurrentPlanned/content.xml'
-    }
 
-TRAFFIC_USERNAME = 'twardill'
-TRAFFIC_PASSWORD = 'int3rRupt'

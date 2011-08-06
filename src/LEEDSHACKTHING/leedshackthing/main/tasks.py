@@ -2,11 +2,23 @@ import urllib2
 import base64
 from StringIO import StringIO
 import gzip
+from dateutil.parser import parse as date_parse
 
-from models import CurrentRoad
+from lxml import etree
+
+from django.contrib.gis.geos import Point
+
+from models import CurrentRoadWorks
 from django.conf import settings
 
+namespaces = {'datex': 'http://datex2.eu/schema/1_0/1_0', 'xsi': 'http://www.w3.org/2001/XMLSchema-instance', 'soapenv': 'http://schemas.xmlsoap.org/soap/envelope/', 'xsd': 'http://www.w3.org/2001/XMLSchema'}
+
 def _download_data(url):
+    
+    if settings.LOCAL_DATA:
+        request = urllib2.Request(url)
+        return urllib2.urlopen(request).read()
+    
     request = urllib2.Request(url)
     base64string = base64.encodestring(
         '%s:%s' % (settings.TRAFFIC_USERNAME, settings.TRAFFIC_PASSWORD)
@@ -22,6 +34,29 @@ def _download_data(url):
     
     return data
 
+def _get_time(time_string):
+    """ Convert the string from the xml into a datetime """
+    return date_parse(time_string)
+
 def update_current_road():
     
     xml = _download_data(settings.DATA_URLS['currentroad'])
+    data = etree.fromstring(xml)
+    situations = data.xpath('//datex:situationRecord', namespaces = namespaces)
+    
+    # remove all existing RoadWorks
+    CurrentRoadWorks.objects.all().delete()
+    
+    for situation in situations:
+        c = CurrentRoadWorks()
+        c.description = situation.xpath('./datex:nonGeneralPublicComment/datex:comment/datex:value', namespaces = namespaces)[0]
+        latitude = situation.xpath('.//datex:latitude', namespaces = namespaces)[0].text
+        longitude = situation.xpath('.//datex:longitude', namespaces = namespaces)[0].text
+        
+        c.location = Point(float(latitude), float(longitude))
+        c.start_time = _get_time(situation.xpath('.//datex:overallStartTime', namespaces = namespaces)[0].text)
+        c.end_time = _get_time(situation.xpath('.//datex:overallEndTime', namespaces = namespaces)[0].text)
+        
+        c.save()
+        
+    return len(situations)

@@ -9,7 +9,11 @@ class Incident(models.Model):
 
     objects = models.GeoManager()
     
+class CurrentRoadWorks(models.Model):
     
-class CurrentRoad(models.Model):
+    description = models.TextField()
+    location = models.PointField()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
     
-    update_time = models.DateTimeField()
+    objects = models.GeoManager()
