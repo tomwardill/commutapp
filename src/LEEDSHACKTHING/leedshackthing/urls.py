@@ -24,7 +24,7 @@ urlpatterns = patterns('',
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    # (r'^admin/', include(admin.site.urls)),
+    (r'^admin/', include(admin.site.urls)),
         
     # Prevent search engine spiders from generating 404s when looking for a 
     # robots.txt. Obviously remove these if using actual files

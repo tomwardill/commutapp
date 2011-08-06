@@ -90,6 +90,7 @@ TEMPLATE_DIRS = (
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.messages',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
@@ -100,16 +101,17 @@ INSTALLED_APPS = (
 
 ROOT_URLCONF = 'leedshackthing.urls'
 
-# Override with environment specific settings
-try:
-    from local_settings import *
-except ImportError:
-    pass
-
 DATA_URLS = {
     'currentroad': 'http://datex2.tistrafficinfo.com/England/CurrentPlanned/content.xml'
     }
 
 TRAFFIC_USERNAME = 'twardill'
-TRAFFIC_PASSWORD = 'int3rRupt'
+TRAFFIC_PASSWORD = ''
+LOCAL_DATA = False
 LOGIN_REDIRECT_URL = '/test'
+
+# Override with environment specific settings
+try:
+    from local_settings import *
+except ImportError:
+    pass
