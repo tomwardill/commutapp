@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="./currentroad" method="POST">
+{% csrf_token %}
+<input type="submit" value="Current Road Works" />
+</form>
+
+<form action="./futureroad" method="POST">
+{% csrf_token %}
+<input type="submit" value="Future Road Works" />
+</form>
+
+<form action="./unplannedevent" method="POST">
+{% csrf_token %}
+<input type="submit" value="Unplanned Events" />
+</form>
+{% endblock %}
