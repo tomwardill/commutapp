@@ -8,3 +8,8 @@ class Incident(models.Model):
     location = models.PointField()
 
     objects = models.GeoManager()
+    
+    
+class CurrentRoad(models.Model):
+    
+    update_time = models.DateTimeField()

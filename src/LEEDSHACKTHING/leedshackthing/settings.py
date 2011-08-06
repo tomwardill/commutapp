@@ -105,3 +105,9 @@ try:
 except ImportError:
     pass
 
+DATA_URLS = {
+    'currentroad': 'http://datex2.tistrafficinfo.com/England/CurrentPlanned/content.xml'
+    }
+
+TRAFFIC_USERNAME = 'twardill'
+TRAFFIC_PASSWORD = 'int3rRupt'
