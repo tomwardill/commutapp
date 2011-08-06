@@ -36,6 +36,7 @@ urlpatterns = patterns('',
     # actually is. Many user agents (RIM based blackberry browsers, old 
     # versions of IE etc) lazily look in the root first, raising a 404
     (r'^favicon\.ico$', lambda r: HttpResponseRedirect('/static/images/favicon.ico')),
+    url(r'^$', views.index.index, name = 'index'),
     url(r'^test/$', views.test.index, name = 'test'),
     url(r'^test/currentroad', views.test.currentroad, name = "currentroad"),
     url(r'^test/futureroad', views.test.futureroad, name = "futureroad"),
