@@ -42,6 +42,7 @@ urlpatterns = patterns('',
     url(r'^test/unplannedevent', views.test.unplannedevent, name = "unplannedevent"),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}, name = "login"),
     url(r'^accounts/newuser/$', views.user.createuser, name = "createuser"),
+    url(r'^accounts/profile/$', views.user.profile, name = "profile"),
     url(r'^logout', 'django.contrib.auth.views.logout', name = "logout"),
 )
 

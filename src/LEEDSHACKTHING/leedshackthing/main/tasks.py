@@ -11,6 +11,8 @@ from django.contrib.gis.geos import Point
 from models import CurrentRoadWorks, FutureRoadWorks, UnplannedEvent
 from django.conf import settings
 
+import pyrowl
+
 namespaces = {'datex': 'http://datex2.eu/schema/1_0/1_0', 'xsi': 'http://www.w3.org/2001/XMLSchema-instance', 'soapenv': 'http://schemas.xmlsoap.org/soap/envelope/', 'xsd': 'http://www.w3.org/2001/XMLSchema'}
 
 def _download_data(url):
@@ -108,3 +110,7 @@ def update_unplanned_events():
         c.save()
         
     return len(situations)
+
+def sendgrowl(growlkey, message):
+    p = pyrowl.Pyrowl(growlkey)
+    p.push("leedshackthing", "Commute Update", message)
