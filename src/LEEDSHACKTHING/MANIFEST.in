@@ -1,0 +1,2 @@
+recursive-include leedshackthing *.html
+recursive-include leedshackthing/static *
