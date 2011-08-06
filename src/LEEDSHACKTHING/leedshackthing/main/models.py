@@ -17,3 +17,21 @@ class CurrentRoadWorks(models.Model):
     end_time = models.DateTimeField()
     
     objects = models.GeoManager()
+
+class FutureRoadWorks(models.Model):
+    
+    description = models.TextField()
+    location = models.PointField()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    
+    objects = models.GeoManager()
+    
+class UnplannedEvent(models.Model):
+    
+    description = models.TextField()
+    location = models.PointField()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    
+    objects = models.GeoManager()
