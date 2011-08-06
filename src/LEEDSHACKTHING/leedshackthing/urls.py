@@ -41,6 +41,9 @@ urlpatterns = patterns('',
     url(r'^test/currentroad', views.test.currentroad, name = "currentroad"),
     url(r'^test/futureroad', views.test.futureroad, name = "futureroad"),
     url(r'^test/unplannedevent', views.test.unplannedevent, name = "unplannedevent"),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}, name = "login"),
+    url(r'^accounts/newuser/$', views.user.createuser, name = "createuser"),
+    url(r'^logout', 'django.contrib.auth.views.logout', name = "logout"),
 )
 
 # Serve static content through Django.

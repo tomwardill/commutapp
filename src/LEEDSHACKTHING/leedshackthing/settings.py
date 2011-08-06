@@ -108,11 +108,10 @@ DATA_URLS = {
 TRAFFIC_USERNAME = 'twardill'
 TRAFFIC_PASSWORD = ''
 LOCAL_DATA = False
+LOGIN_REDIRECT_URL = '/test'
 
 # Override with environment specific settings
 try:
     from local_settings import *
 except ImportError:
     pass
-
-
