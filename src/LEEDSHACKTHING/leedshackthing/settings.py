@@ -112,3 +112,4 @@ DATA_URLS = {
 
 TRAFFIC_USERNAME = 'twardill'
 TRAFFIC_PASSWORD = 'int3rRupt'
+LOGIN_REDIRECT_URL = '/test'
