@@ -94,7 +94,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.gis',
-    'leedshackthing.main'
+    'leedshackthing.main',
+    'south'
 )
 
 ROOT_URLCONF = 'leedshackthing.urls'
