@@ -49,7 +49,7 @@ def update_current_road():
     
     for situation in situations:
         c = CurrentRoadWorks()
-        c.description = situation.xpath('./datex:nonGeneralPublicComment/datex:comment/datex:value', namespaces = namespaces)[0]
+        c.description = situation.xpath('./datex:nonGeneralPublicComment/datex:comment/datex:value', namespaces = namespaces)[0].text
         latitude = situation.xpath('.//datex:latitude', namespaces = namespaces)[0].text
         longitude = situation.xpath('.//datex:longitude', namespaces = namespaces)[0].text
         
@@ -73,7 +73,7 @@ def update_future_road():
     
     for situation in situations:
         c = FutureRoadWorks()
-        c.description = situation.xpath('./datex:nonGeneralPublicComment/datex:comment/datex:value', namespaces = namespaces)[0]
+        c.description = situation.xpath('./datex:nonGeneralPublicComment/datex:comment/datex:value', namespaces = namespaces)[0].text
         latitude = situation.xpath('.//datex:latitude', namespaces = namespaces)[0].text
         longitude = situation.xpath('.//datex:longitude', namespaces = namespaces)[0].text
         
@@ -97,7 +97,7 @@ def update_unplanned_events():
     
     for situation in situations:
         c = UnplannedEvent()
-        c.description = situation.xpath('./datex:nonGeneralPublicComment/datex:comment/datex:value', namespaces = namespaces)[0]
+        c.description = situation.xpath('./datex:nonGeneralPublicComment/datex:comment/datex:value', namespaces = namespaces)[0].text
         latitude = situation.xpath('.//datex:latitude', namespaces = namespaces)[0].text
         longitude = situation.xpath('.//datex:longitude', namespaces = namespaces)[0].text
         
