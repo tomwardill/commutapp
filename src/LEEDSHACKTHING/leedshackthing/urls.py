@@ -12,8 +12,10 @@ from django.http import HttpResponseNotFound, HttpResponseServerError
 from django.template.loader import render_to_string
 
 # Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
+from django.contrib import admin
+admin.autodiscover()
+
+from leedshackthing.main import views
 
 urlpatterns = patterns('',
 
@@ -34,6 +36,7 @@ urlpatterns = patterns('',
     # actually is. Many user agents (RIM based blackberry browsers, old 
     # versions of IE etc) lazily look in the root first, raising a 404
     (r'^favicon\.ico$', lambda r: HttpResponseRedirect('/static/images/favicon.ico')),
+    url(r'^$', views.index, name = 'index'),
 )
 
 # Serve static content through Django.
