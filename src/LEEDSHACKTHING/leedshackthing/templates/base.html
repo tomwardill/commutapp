@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>commutr</title>
+    <title>commutapp</title>
     <style type="text/css">
     html { 
   padding:0px;
@@ -62,7 +62,10 @@ text-decoration: none;
   padding: 10px;
   background-color: #bbccee;
   overflow: auto;
-} 
+}
+#appname {
+    font-size: 1.8em;
+}
  </style>
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
@@ -82,7 +85,7 @@ text-decoration: none;
     
     <div id="menu"><img src="/static/traffic-sidebar.jpg"/></div>
     <div id="content">
-    <p><h1><a href="{% url index %}"</a>Commutr</a></h1></p>
+    <p><h1><a href="{% url index %}" id="appname">Commutapp</a></h1></p>
     {% if user.is_authenticated %}
         <p>Welcome, {{ user.username }}. <a href="{% url logout %}">logout</a></p>
 	<span><a href="{% url profile %}">Edit your profile</a></span>
