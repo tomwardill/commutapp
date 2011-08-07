@@ -47,6 +47,7 @@ urlpatterns = patterns('',
     url(r'^accounts/profile/$', views.user.profile, name = "profile"),
     url(r'^logout', 'django.contrib.auth.views.logout', name = "logout"),
     url(r'^commute/new/$', views.commute.new, name = 'commute-new'),
+    url(r'^commute/edit/(?P<commute_id>\d+)/$', views.commute.edit, name = 'commute-edit'),
 )
 
 # Serve static content through Django.

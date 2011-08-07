@@ -1,6 +1,8 @@
+wkt = new OpenLayers.Format.WKT();   
+
 function featureadded(feature) {
     feature.feature.geometry.transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"))
-    wkt = new OpenLayers.Format.WKT();    
+ 
     polygonControl.deactivate()
     $('#noneToggle')[0].checked = true;
     
@@ -14,7 +16,7 @@ function activate() {
 }
 
 $(document).ready(function() {
-        var map, layer;
+        var layer;
             map = new OpenLayers.Map('map');
             layer = new OpenLayers.Layer.OSM( "Simple OSM Map");
             map.addLayers([layer, polygonLayer]);

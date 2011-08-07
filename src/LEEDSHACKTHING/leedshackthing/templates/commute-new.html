@@ -5,18 +5,48 @@
 <script type="text/javascript">
 var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
 var polygonControl;
+var map;
 </script>
 
+
 <script type="text/javascript" src="/static/js/commutemap.js"></script>
+
+{% if commute %}
+<script type="text/javascript">
+
+$(document).ready(function() {
+    var bound = '{{ commute.box.wkt }}';
+    poly = wkt.read(bound);
+    center = poly.geometry.getCentroid();
+    
+    var polygonFeature = new OpenLayers.Feature.Vector(
+                poly.geometry.transform(
+                    new OpenLayers.Projection("EPSG:4326"),
+                    map.getProjectionObject()));    
+    
+    polygonLayer.addFeatures([polygonFeature]);
+    
+    
+    map.setCenter(
+                new OpenLayers.LonLat(center.x, center.y).transform(
+                    new OpenLayers.Projection("EPSG:4326"),
+                    map.getProjectionObject()
+                ), 8
+            );
+            
+});
+
+</script>
+{% endif %}
 
 <form action="." method="POST">
     {% csrf_token %}
     <label for="name">Name: </label>
-    <input type="text" name="name" /> <br />
+    <input type="text" name="name" value = "{{ commute.name }}" /> <br />
     <label for="starttime">Start Time: </label>
-    <input type="text" name="starttime" id="starttime"/><br />
+    <input type="text" name="starttime" id="starttime" value = "{{ commute.start_time.isoformat }}"/><br />
     <label for="endtime">End Time: </label>
-    <input type="text" name="endtime" id="endtime"/><br />
+    <input type="text" name="endtime" id="endtime" value = "{{ commute.end_time.isoformat }}"/><br />
     <input type="hidden" name="wkt" id="wkt" />
     <input type="submit" value="Please Save My Commute" />
 </form>

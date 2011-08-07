@@ -108,7 +108,7 @@ DATA_URLS = {
 TRAFFIC_USERNAME = 'twardill'
 TRAFFIC_PASSWORD = ''
 LOCAL_DATA = False
-LOGIN_REDIRECT_URL = '/test'
+LOGIN_REDIRECT_URL = '/'
 AUTH_PROFILE_MODULE = "main.UserProfile"
 
 # Override with environment specific settings
