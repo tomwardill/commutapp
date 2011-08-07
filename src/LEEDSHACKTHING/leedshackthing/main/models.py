@@ -37,10 +37,25 @@ class UnplannedEvent(models.Model):
     
     objects = models.GeoManager()
 
+
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
     phonenum = models.CharField(max_length=12, blank=True)
     twitter = models.CharField(max_length=50, blank=True)
     growlkey = models.CharField(max_length =41, blank=True)
     
-#User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
+
+    
+class Commute(models.Model):
+    
+    user = models.ForeignKey(User)
+    name = models.CharField(max_length = 200)
+    
+    box = models.PolygonField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    
+    def __unicode__(self):
+        return self.name
+    
+>>>>>>> 9cf0795cf5e297a226c7c8a7979495b6083cd7c4
