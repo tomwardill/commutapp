@@ -14,6 +14,7 @@ from models import CurrentRoadWorks, FutureRoadWorks, UnplannedEvent, Commute, A
 from django.conf import settings
 
 import pyrowl
+from leedshackthing.main.views.sms import SMS
 
 namespaces = {'datex': 'http://datex2.eu/schema/1_0/1_0', 'xsi': 'http://www.w3.org/2001/XMLSchema-instance', 'soapenv': 'http://schemas.xmlsoap.org/soap/envelope/', 'xsd': 'http://www.w3.org/2001/XMLSchema'}
 
@@ -143,6 +144,8 @@ def notify_users():
             continue
         if profile.growlkey:
             sendgrowl(profile.growlkey, c.affector.description)
+        if profile.phonenum:
+            sendSMS(profile.phonenum, "%s: %s" % (c.affector.impact, c.affector.small_description))
     
 
 def sendgrowl(growlkey, message):
@@ -153,4 +156,5 @@ def sendgrowl(growlkey, message):
     p.push("leedshackthing", "Commute Update", message)
 
 def sendSMS(recipent, message):
-    s = sms.SMS(recipent, message)
+    s = SMS()
+    s.post(recipent, message)
