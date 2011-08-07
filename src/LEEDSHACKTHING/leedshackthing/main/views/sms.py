@@ -17,16 +17,6 @@ class SMS(object):
             request = urllib2.Request(url, data = xml)
             request.headers = {'Content-Type' : 'text/xml', 'Authorization' : "Basic %s" % (encoded_username)}
             result = urllib2.urlopen(request)
-            
-            #result = urllib2.urlopen(
-            #    url,
-            #    data = xml, 
-            #    headers={'Content-Type' : 'text/xml', 'Authorization' : "Basic %s" % (encoded_username)})
-            res = result.read()
 
-            if result.status_code == 200:
-                root = ElementTree.fromstring(result.content)
-                template_values['message_id'] = root.getchildren()[0].attrib['id']
-                template_values['message'] = "Success!"
  
         

@@ -9,6 +9,7 @@ from datetime import datetime
 from lxml import etree
 
 from django.contrib.gis.geos import Point
+from django.core.mail import send_mail
 
 from models import CurrentRoadWorks, FutureRoadWorks, UnplannedEvent, Commute, AffectedCommute
 from django.conf import settings
@@ -143,9 +144,10 @@ def notify_users():
         except:
             continue
         if profile.growlkey:
-            sendgrowl(profile.growlkey, c.affector.description)
+            sendgrowl(profile.growlkey, "%s: %s" % (c.affector.impact, c.affector.small_description))
         if profile.phonenum:
             sendSMS(profile.phonenum, "%s: %s" % (c.affector.impact, c.affector.small_description))
+        sendEmail(c.commute.user.email, c.affector.description)
     
 
 def sendgrowl(growlkey, message):
@@ -158,3 +160,7 @@ def sendgrowl(growlkey, message):
 def sendSMS(recipent, message):
     s = SMS()
     s.post(recipent, message)
+
+def sendEmail(recipient, message):
+    
+    send_mail('Commute Warning', message, 'warning@commutr.com', [recipient])
