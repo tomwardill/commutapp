@@ -58,4 +58,3 @@ class Commute(models.Model):
     def __unicode__(self):
         return self.name
     
->>>>>>> 9cf0795cf5e297a226c7c8a7979495b6083cd7c4
