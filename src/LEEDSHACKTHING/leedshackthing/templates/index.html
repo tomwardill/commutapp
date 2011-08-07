@@ -4,7 +4,7 @@
 
 <ul id="commutes">
 {% for commute in commutes %}
-    <li>{{ commute }}</li>
+    <li><a href="{% url commute-edit commute.id %}">{{ commute }}</a></li>
 {% endfor %}
 </ul>
 
