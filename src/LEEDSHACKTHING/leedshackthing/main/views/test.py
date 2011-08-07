@@ -1,4 +1,6 @@
 # Create your views here.
+from datetime import datetime
+
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
@@ -30,4 +32,9 @@ def futureroad(request):
 def unplannedevent(request):
     
     number = tasks.update_unplanned_events()
+    return HttpResponseRedirect(reverse('test'))
+
+def affected(request):
+
+    commutes = tasks.notify_users()
     return HttpResponseRedirect(reverse('test'))

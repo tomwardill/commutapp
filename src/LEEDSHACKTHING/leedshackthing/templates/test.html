@@ -31,4 +31,9 @@
 {% csrf_token %}
 <input type="submit" value="Unplanned Events" />
 </form>
+
+<form action="./affected" method="POST">
+{% csrf_token %}
+<input type="submit" value="Affected Commutes" />
+</form>
 {% endblock %}

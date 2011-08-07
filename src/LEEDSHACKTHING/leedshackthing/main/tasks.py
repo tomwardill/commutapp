@@ -3,12 +3,14 @@ import base64
 from StringIO import StringIO
 import gzip
 from dateutil.parser import parse as date_parse
+import operator
+from datetime import datetime
 
 from lxml import etree
 
 from django.contrib.gis.geos import Point
 
-from models import CurrentRoadWorks, FutureRoadWorks, UnplannedEvent
+from models import CurrentRoadWorks, FutureRoadWorks, UnplannedEvent, Commute, AffectedCommute
 from django.conf import settings
 
 import pyrowl
@@ -102,8 +104,11 @@ def update_unplanned_events():
         c.description = situation.xpath('./datex:nonGeneralPublicComment/datex:comment/datex:value', namespaces = namespaces)[0].text
         latitude = situation.xpath('.//datex:latitude', namespaces = namespaces)[0].text
         longitude = situation.xpath('.//datex:longitude', namespaces = namespaces)[0].text
-        
         c.location = Point(float(longitude), float(latitude))
+        
+        c.small_description = situation.xpath('.//datex:descriptor', namespaces = namespaces)[0].getchildren()[0].text
+        c.impact = situation.xpath('.//datex:impactOnTraffic', namespaces = namespaces)[0].text
+        
         c.start_time = _get_time(situation.xpath('.//datex:overallStartTime', namespaces = namespaces)[0].text)
         c.end_time = _get_time(situation.xpath('.//datex:overallEndTime', namespaces = namespaces)[0].text)
         
@@ -111,6 +116,38 @@ def update_unplanned_events():
         
     return len(situations)
 
+def find_affected_commutes(time):
+    """ Find all events that match"""
+    
+    in_time = Commute.objects.filter(start_time__lt = time, end_time__gt = time)
+    
+    affected = []
+    for event in UnplannedEvent.objects.all():
+        for c in in_time:
+            if c.box.contains(event.location):
+                a = AffectedCommute(c, event)
+                affected.append(a)
+    
+    return affected
+
+def notify_users():
+    
+    now = datetime.now().time()
+    commutes = find_affected_commutes(now)
+    
+    for c in commutes:
+        
+        try:
+            profile = c.commute.user.get_profile()
+        except:
+            continue
+        if profile.growlkey:
+            sendgrowl(profile.growlkey, c.affector.description)
+    
+
 def sendgrowl(growlkey, message):
+    
+    growlkey = str(growlkey)
+    
     p = pyrowl.Pyrowl(growlkey)
     p.push("leedshackthing", "Commute Update", message)

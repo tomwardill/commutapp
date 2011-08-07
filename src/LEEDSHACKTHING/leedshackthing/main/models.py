@@ -1,7 +1,14 @@
 from django.contrib.gis.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 
 # Create your models here.
+
+class AffectedCommute(object):
+    
+    def __init__(self, commute, affector):
+        self.commute = commute
+        self.affector = affector
 
 class Incident(models.Model):
     
@@ -31,6 +38,8 @@ class FutureRoadWorks(models.Model):
 class UnplannedEvent(models.Model):
     
     description = models.TextField()
+    small_description = models.TextField()
+    impact = models.TextField()
     location = models.PointField()
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
@@ -44,7 +53,8 @@ class UserProfile(models.Model):
     twitter = models.CharField(max_length=50, blank=True)
     growlkey = models.CharField(max_length =41, blank=True)
     
-
+    
+    
     
 class Commute(models.Model):
     
@@ -58,3 +68,8 @@ class Commute(models.Model):
     def __unicode__(self):
         return self.name
     
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+post_save.connect(create_user_profile, sender=User)
