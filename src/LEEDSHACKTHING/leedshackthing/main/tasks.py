@@ -153,7 +153,7 @@ def sendgrowl(growlkey, message):
     growlkey = str(growlkey)
     
     p = pyrowl.Pyrowl(growlkey)
-    p.push("leedshackthing", "Commute Update", message)
+    p.push("commutr", "Commutr Update", message)
 
 def sendSMS(recipent, message):
     s = SMS()

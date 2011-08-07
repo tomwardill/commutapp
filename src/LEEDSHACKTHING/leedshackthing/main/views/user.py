@@ -28,6 +28,8 @@ def profile(request):
             user.save()
             user_profile.save()
             messages.success(request, 'Profile details updated.')
+        else:
+            messages.warning(request, 'Password incorrect.')
     select_hours_list=range(24)
     return render_to_response("profile.html",locals(),context_instance=RequestContext(request))
   
