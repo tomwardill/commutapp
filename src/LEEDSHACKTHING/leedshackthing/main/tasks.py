@@ -114,3 +114,6 @@ def update_unplanned_events():
 def sendgrowl(growlkey, message):
     p = pyrowl.Pyrowl(growlkey)
     p.push("leedshackthing", "Commute Update", message)
+
+def sendSMS(recipent, message):
+    s = sms.SMS(recipent, message)

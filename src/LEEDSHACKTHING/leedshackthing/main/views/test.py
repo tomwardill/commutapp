@@ -31,3 +31,4 @@ def unplannedevent(request):
     
     number = tasks.update_unplanned_events()
     return HttpResponseRedirect(reverse('test'))
+
