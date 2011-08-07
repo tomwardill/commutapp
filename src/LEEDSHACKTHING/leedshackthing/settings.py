@@ -110,6 +110,7 @@ TRAFFIC_PASSWORD = ''
 LOCAL_DATA = False
 LOGIN_REDIRECT_URL = '/test'
 AUTH_PROFILE_MODULE = "main.UserProfile"
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 # Override with environment specific settings
 try:

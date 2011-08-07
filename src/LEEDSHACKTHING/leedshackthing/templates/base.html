@@ -89,6 +89,13 @@ text-decoration: none;
     {% else %}
         <p>Please <a href="{% url login %}">log in</a> to continue.</p>
     {% endif %}
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+	<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     {% block content %}
     {% endblock content %}
     </div>

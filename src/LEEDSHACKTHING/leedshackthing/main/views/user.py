@@ -4,7 +4,7 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.db import models
-
+from django.contrib import messages
 
 def createuser(request):
     if request.method=="POST":
@@ -27,6 +27,7 @@ def profile(request):
             #user.com_mins = request.POST["com_mins"]
             user.save()
             user_profile.save()
+            messages.success(request, 'Profile details updated.')
     select_hours_list=range(24)
     return render_to_response("profile.html",locals(),context_instance=RequestContext(request))
   
