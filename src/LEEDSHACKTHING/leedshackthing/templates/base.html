@@ -82,10 +82,10 @@ text-decoration: none;
     
     <div id="menu"><img src="/static/traffic-sidebar.jpg"/></div>
     <div id="content">
-    <p><h1>Commutr</h1></p>
+    <p><h1><a href="{% url index %}"</a>Commutr</a></h1></p>
     {% if user.is_authenticated %}
         <p>Welcome, {{ user.username }}. <a href="{% url logout %}">logout</a></p>
-    
+	<span><a href="{% url profile %}">Edit your profile</a></span>
     {% else %}
         <p>Please <a href="{% url login %}">log in</a> to continue.</p>
     {% endif %}
