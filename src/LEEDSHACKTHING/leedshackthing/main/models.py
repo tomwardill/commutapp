@@ -44,6 +44,9 @@ class Commute(models.Model):
     name = models.CharField(max_length = 200)
     
     box = models.PolygonField()
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    
+    def __unicode__(self):
+        return self.name
     

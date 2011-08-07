@@ -53,7 +53,7 @@ def update_current_road():
         latitude = situation.xpath('.//datex:latitude', namespaces = namespaces)[0].text
         longitude = situation.xpath('.//datex:longitude', namespaces = namespaces)[0].text
         
-        c.location = Point(float(latitude), float(longitude))
+        c.location = Point(float(longitude), float(latitude))
         c.start_time = _get_time(situation.xpath('.//datex:overallStartTime', namespaces = namespaces)[0].text)
         c.end_time = _get_time(situation.xpath('.//datex:overallEndTime', namespaces = namespaces)[0].text)
         
@@ -77,7 +77,7 @@ def update_future_road():
         latitude = situation.xpath('.//datex:latitude', namespaces = namespaces)[0].text
         longitude = situation.xpath('.//datex:longitude', namespaces = namespaces)[0].text
         
-        c.location = Point(float(latitude), float(longitude))
+        c.location = Point(float(longitude), float(latitude))
         c.start_time = _get_time(situation.xpath('.//datex:overallStartTime', namespaces = namespaces)[0].text)
         c.end_time = _get_time(situation.xpath('.//datex:overallEndTime', namespaces = namespaces)[0].text)
         
@@ -101,7 +101,7 @@ def update_unplanned_events():
         latitude = situation.xpath('.//datex:latitude', namespaces = namespaces)[0].text
         longitude = situation.xpath('.//datex:longitude', namespaces = namespaces)[0].text
         
-        c.location = Point(float(latitude), float(longitude))
+        c.location = Point(float(longitude), float(latitude))
         c.start_time = _get_time(situation.xpath('.//datex:overallStartTime', namespaces = namespaces)[0].text)
         c.end_time = _get_time(situation.xpath('.//datex:overallEndTime', namespaces = namespaces)[0].text)
         

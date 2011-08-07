@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<ul id="commutes">
+{% for commute in commutes %}
+    <li>{{ commute }}</li>
+{% endfor %}
+</ul>
+
+<a href="{% url commute-new %}">Create a new commute</a>
+
+{% endblock content %}
