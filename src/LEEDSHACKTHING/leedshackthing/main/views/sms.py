@@ -6,7 +6,4 @@ class SMS(object):
 
     def post(self, recipient, message):
         
-        return NotImplemented
-
- 
-        
+        raise NotImplemented

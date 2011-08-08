@@ -158,7 +158,7 @@ def sendgrowl(growlkey, message):
     growlkey = str(growlkey)
     
     p = pyrowl.Pyrowl(growlkey)
-    p.push("commutr", "Commutr Update", message)
+    p.push("commutapp", "Commutapp Update", message)
 
 def sendSMS(recipent, message):
     s = SMS()
@@ -166,4 +166,4 @@ def sendSMS(recipent, message):
 
 def sendEmail(recipient, message):
     
-    send_mail('Commute Warning', message, 'warning@commutr.com', [recipient])
+    send_mail('Commute Warning', message, 'warning@commutapp.com', [recipient])

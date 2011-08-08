@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.contrib.gis.geos import fromstr
+from django.contrib import messages
 
 from dateutil.parser import parse as date_parse
 
@@ -26,7 +27,7 @@ def new(request):
         c.end_time = end_time
         
         c.save()
-        
+        messages.success(request, 'New commute created.')
         return HttpResponseRedirect(reverse('index'))
     
     return render_to_response('commute-new.html', {}, context_instance = RequestContext(request))
@@ -50,7 +51,7 @@ def edit(request, commute_id):
         c.end_time = end_time
         
         c.save()
-        
+        messages.success(request, 'Commute edited.')
         return HttpResponseRedirect(reverse('index'))
     
     return render_to_response('commute-new.html', locals(), context_instance = RequestContext(request))
