@@ -18,6 +18,7 @@ setup(
     install_requires = [
         'lxml',
         'south',
-        'python-dateutil'
+        'python-dateutil',
+        'tweepy'
         ]
     )
