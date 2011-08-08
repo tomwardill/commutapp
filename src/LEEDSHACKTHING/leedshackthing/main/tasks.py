@@ -145,8 +145,11 @@ def notify_users():
             continue
         if profile.growlkey:
             sendgrowl(profile.growlkey, "%s: %s" % (c.affector.impact, c.affector.small_description))
-        if profile.phonenum:
-            sendSMS(profile.phonenum, "%s: %s" % (c.affector.impact, c.affector.small_description))
+        
+        # We don't have an SMS solution yet
+        #if profile.phonenum:
+        #    sendSMS(profile.phonenum, "%s: %s" % (c.affector.impact, c.affector.small_description))
+        
         sendEmail(c.commute.user.email, c.affector.description)
     
 

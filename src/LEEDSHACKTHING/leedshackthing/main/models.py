@@ -54,8 +54,6 @@ class UserProfile(models.Model):
     growlkey = models.CharField(max_length =41, blank=True)
     
     
-    
-    
 class Commute(models.Model):
     
     user = models.ForeignKey(User)
