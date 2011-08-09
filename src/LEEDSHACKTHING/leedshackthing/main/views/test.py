@@ -36,5 +36,5 @@ def unplannedevent(request):
 
 def affected(request):
 
-    commutes = tasks.notify_users()
+    commutes = tasks.notify_users.delay()
     return HttpResponseRedirect(reverse('test'))

@@ -7,13 +7,12 @@ import operator
 from datetime import datetime
 
 from lxml import etree
-
 from django.contrib.gis.geos import Point
+from django.conf import settings
+from celery.task import task
 
 
 from models import CurrentRoadWorks, FutureRoadWorks, UnplannedEvent, Commute, AffectedCommute
-from django.conf import settings
-
 from notifications import pyrowl, twitter, email
 
 namespaces = {'datex': 'http://datex2.eu/schema/1_0/1_0', 'xsi': 'http://www.w3.org/2001/XMLSchema-instance', 'soapenv': 'http://schemas.xmlsoap.org/soap/envelope/', 'xsd': 'http://www.w3.org/2001/XMLSchema'}
@@ -117,6 +116,7 @@ def update_unplanned_events():
         
     return len(situations)
 
+
 def find_affected_commutes(time):
     """ Find all events that match"""
     
@@ -131,6 +131,7 @@ def find_affected_commutes(time):
     
     return affected
 
+@task()
 def notify_users():
     
     now = datetime.now().time()
@@ -146,12 +147,12 @@ def notify_users():
             sendgrowl(profile.growlkey, "%s: %s" % (c.affector.impact, c.affector.small_description))
         
         if profile.twitter:
-            sendTweet(profile.twitter, "%s: %s" % (c.affector.impact, c.affector.small_description))
+            sendTweet.delay(profile.twitter, "%s: %s" % (c.affector.impact, c.affector.small_description))
         # We don't have an SMS solution yet
         #if profile.phonenum:
         #    sendSMS(profile.phonenum, "%s: %s" % (c.affector.impact, c.affector.small_description))
         
-        sendEmail(c.commute.user.email, c.affector.description)
+        sendEmail.delay(c.commute.user.email, c.affector.description)
     
 
 def sendgrowl(growlkey, message):
@@ -165,11 +166,13 @@ def sendSMS(recipent, message):
     s = SMS()
     s.post(recipent, message)
 
+@task()
 def sendEmail(recipient, message):
     
     e = email.Email()
     e.post(recipient, message)
-    
+
+@task()
 def sendTweet(recipient, message):
     
     t = twitter.Twitter()
