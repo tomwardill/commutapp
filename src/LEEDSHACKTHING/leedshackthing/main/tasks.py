@@ -9,13 +9,12 @@ from datetime import datetime
 from lxml import etree
 
 from django.contrib.gis.geos import Point
-from django.core.mail import send_mail
+
 
 from models import CurrentRoadWorks, FutureRoadWorks, UnplannedEvent, Commute, AffectedCommute
 from django.conf import settings
 
-import pyrowl
-from leedshackthing.main.views.sms import SMS
+from notifications import pyrowl, twitter, email
 
 namespaces = {'datex': 'http://datex2.eu/schema/1_0/1_0', 'xsi': 'http://www.w3.org/2001/XMLSchema-instance', 'soapenv': 'http://schemas.xmlsoap.org/soap/envelope/', 'xsd': 'http://www.w3.org/2001/XMLSchema'}
 
@@ -166,4 +165,5 @@ def sendSMS(recipent, message):
 
 def sendEmail(recipient, message):
     
-    send_mail('Commute Warning', message, 'warning@commutapp.com', [recipient])
+    e = email.Email()
+    e.post(recipient, message)
