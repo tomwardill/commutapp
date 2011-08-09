@@ -145,6 +145,8 @@ def notify_users():
         if profile.growlkey:
             sendgrowl(profile.growlkey, "%s: %s" % (c.affector.impact, c.affector.small_description))
         
+        if profile.twitter:
+            sendTweet(profile.twitter, "%s: %s" % (c.affector.impact, c.affector.small_description))
         # We don't have an SMS solution yet
         #if profile.phonenum:
         #    sendSMS(profile.phonenum, "%s: %s" % (c.affector.impact, c.affector.small_description))
@@ -167,3 +169,8 @@ def sendEmail(recipient, message):
     
     e = email.Email()
     e.post(recipient, message)
+    
+def sendTweet(recipient, message):
+    
+    t = twitter.Twitter()
+    t.post(recipient, message)
