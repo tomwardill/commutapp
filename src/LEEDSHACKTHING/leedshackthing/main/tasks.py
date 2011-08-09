@@ -42,6 +42,7 @@ def _get_time(time_string):
     """ Convert the string from the xml into a datetime """
     return date_parse(time_string)
 
+@task()
 def update_current_road():
     
     xml = _download_data(settings.DATA_URLS['currentroad'])
@@ -65,6 +66,7 @@ def update_current_road():
         
     return len(situations)
 
+@task()
 def update_future_road():
     
     xml = _download_data(settings.DATA_URLS['futureroad'])
@@ -89,6 +91,7 @@ def update_future_road():
         
     return len(situations)
 
+@task()
 def update_unplanned_events():
     
     xml = _download_data(settings.DATA_URLS['unplannedevent'])
@@ -116,7 +119,7 @@ def update_unplanned_events():
         
     return len(situations)
 
-
+@task()
 def find_affected_commutes(time):
     """ Find all events that match"""
     
@@ -135,7 +138,7 @@ def find_affected_commutes(time):
 def notify_users():
     
     now = datetime.now().time()
-    commutes = find_affected_commutes(now)
+    commutes = find_affected_commutes.delay(now)
     
     for c in commutes:
 

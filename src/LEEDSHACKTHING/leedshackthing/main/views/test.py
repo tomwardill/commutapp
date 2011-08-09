@@ -21,17 +21,17 @@ def index(request):
 
 def currentroad(request):
     
-    number = tasks.update_current_road()
+    number = tasks.update_current_road.delay()
     return HttpResponseRedirect(reverse('test'))
 
 def futureroad(request):
     
-    number = tasks.update_future_road()
+    number = tasks.update_future_road.delay()
     return HttpResponseRedirect(reverse('test'))
 
 def unplannedevent(request):
     
-    number = tasks.update_unplanned_events()
+    number = tasks.update_unplanned_events.delay()
     return HttpResponseRedirect(reverse('test'))
 
 def affected(request):
