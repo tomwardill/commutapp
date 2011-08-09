@@ -96,8 +96,12 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.gis',
     'leedshackthing.main',
-    'south'
+    'south',
+    'djcelery'
 )
+
+import djcelery
+djcelery.setup_loader()
 
 ROOT_URLCONF = 'leedshackthing.urls'
 
@@ -111,6 +115,14 @@ LOCAL_DATA = False
 LOGIN_REDIRECT_URL = '/'
 AUTH_PROFILE_MODULE = "main.UserProfile"
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+# Celery settings
+BROKER_HOST = "localhost"
+BROKER_PORT = 5672
+BROKER_USER = "guest"
+BROKER_PASSWORD = "guest"
+BROKER_VHOST = "/"
+
 
 # Override with environment specific settings
 try:
