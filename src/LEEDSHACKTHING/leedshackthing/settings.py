@@ -116,6 +116,14 @@ LOGIN_REDIRECT_URL = '/'
 AUTH_PROFILE_MODULE = "main.UserProfile"
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
+# Celery settings
+BROKER_HOST = "localhost"
+BROKER_PORT = 5672
+BROKER_USER = "guest"
+BROKER_PASSWORD = "guest"
+BROKER_VHOST = "/"
+
+
 # Override with environment specific settings
 try:
     from local_settings import *
