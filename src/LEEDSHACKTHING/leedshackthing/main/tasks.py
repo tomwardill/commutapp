@@ -138,33 +138,24 @@ def notify_users():
     commutes = find_affected_commutes(now)
     
     for c in commutes:
+
+        profile = c.commute.user.get_profile()
         
-        try:
-            profile = c.commute.user.get_profile()
-        except:
-            continue
         if profile.growlkey:
-            sendgrowl(profile.growlkey, "%s: %s" % (c.affector.impact, c.affector.small_description))
+            sendgrowl.delay(profile.growlkey, "%s: %s" % (c.affector.impact, c.affector.small_description))
         
         if profile.twitter:
             sendTweet.delay(profile.twitter, "%s: %s" % (c.affector.impact, c.affector.small_description))
-        # We don't have an SMS solution yet
-        #if profile.phonenum:
-        #    sendSMS(profile.phonenum, "%s: %s" % (c.affector.impact, c.affector.small_description))
         
         sendEmail.delay(c.commute.user.email, c.affector.description)
     
-
+@task()
 def sendgrowl(growlkey, message):
     
     growlkey = str(growlkey)
     
     p = pyrowl.Pyrowl(growlkey)
     p.push("commutapp", "Commutapp Update", message)
-
-def sendSMS(recipent, message):
-    s = SMS()
-    s.post(recipent, message)
 
 @task()
 def sendEmail(recipient, message):
