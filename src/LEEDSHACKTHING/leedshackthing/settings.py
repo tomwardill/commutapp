@@ -96,8 +96,12 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.gis',
     'leedshackthing.main',
-    'south'
+    'south',
+    'djcelery'
 )
+
+import djcelery
+djcelery.setup_loader()
 
 ROOT_URLCONF = 'leedshackthing.urls'
 
