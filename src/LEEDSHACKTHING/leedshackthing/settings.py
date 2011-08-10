@@ -124,6 +124,24 @@ BROKER_PASSWORD = "guest"
 BROKER_VHOST = "/"
 
 
+from datetime import timedelta
+# Celery scheduled tasks
+CELERYBEAT_SCHEDULE = {
+    "import-current-road": {
+        "task": "leedshackthing.main.tasks.update_current_road",
+        "schedule": timedelta(minutes = 15),
+        },
+    "import-future-road": {
+        "task": "leedshackthing.main.tasks.update_future_road",
+        "schedule": timedelta(hours = 6),
+        },
+    "import-unplanned-events": {
+        "task": "leedshackthing.main.tasks.update_unplanned_events",
+        "schedule": timedelta(minutes = 10),
+        },
+    }
+
+
 # Override with environment specific settings
 try:
     from local_settings import *
