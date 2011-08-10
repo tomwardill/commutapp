@@ -33,6 +33,11 @@ body {
   border-top: 1px solid;
   border-bottom: 1px solid;
 }
+#menu img {
+padding-top: 5px;
+padding-left: 10px;
+  float: left;
+}
 
 #menu h1 {
   text-align: right;
