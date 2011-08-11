@@ -6,3 +6,56 @@
 .smallmap * {
     z-index: 0;
 }
+
+html { 
+  padding:0px;
+  margin:0px;
+}
+ 
+body {
+  background-color: #F9F9F9;
+  font-size: 12px;
+  font-family: Futura, Arial, SunSans-Regular, Sans-Serif;
+  color:#424242;  
+  padding:20px 15%;
+  margin:0px;
+}
+ 
+#enclosure {
+  background-color: #FEFEFF;
+  border-left: 1px solid;
+  border-right: 1px solid;
+  padding: 10px;
+}
+
+
+#menu {
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+}
+#menu img {
+padding-top: 5px;
+padding-left: 10px;
+  float: left;
+}
+
+#menu h1 {
+  text-align: right;
+}
+
+#menu h1 a {
+  color: #FF4444; 
+}
+
+#welcome {
+  text-align: right;
+  width: 100%;
+}
+
+
+#content li {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
