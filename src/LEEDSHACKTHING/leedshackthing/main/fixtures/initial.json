@@ -1,0 +1,51 @@
+[
+  {
+    "pk": 1, 
+    "model": "main.commutechoice", 
+    "fields": {
+      "description": "Monday"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "main.commutechoice", 
+    "fields": {
+      "description": "Tuesday"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "main.commutechoice", 
+    "fields": {
+      "description": "Friday"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "main.commutechoice", 
+    "fields": {
+      "description": "Saturday"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "main.commutechoice", 
+    "fields": {
+      "description": "Sunday"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "main.commutechoice", 
+    "fields": {
+      "description": "Thursday"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "main.commutechoice", 
+    "fields": {
+      "description": "Wednesday"
+    }
+  }
+]

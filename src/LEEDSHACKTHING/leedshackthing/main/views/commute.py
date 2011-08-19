@@ -8,6 +8,7 @@ from django.contrib import messages
 from dateutil.parser import parse as date_parse
 
 from leedshackthing.main.models import Commute
+from leedshackthing.main.forms import CommuteForm
 
 
 def new(request):
@@ -16,21 +17,11 @@ def new(request):
     data = {}
     
     if request.method == 'POST':
-
-        c = Commute()
-        c.user = request.user
-        c.name = request.POST['name']
-        c.box = fromstr(request.POST['wkt'])
-        start_time = date_parse(request.POST['starttime']).time()
-        end_time = date_parse(request.POST['endtime']).time()
-        c.start_time = start_time
-        c.end_time = end_time
-        
-        c.save()
-        messages.success(request, 'New commute created.')
-        return HttpResponseRedirect(reverse('index'))
+        pass
+    else:
+        data['form'] = CommuteForm()
     
-    return render_to_response('commute-new.html', {}, context_instance = RequestContext(request))
+    return render_to_response('commute-new.html', data, context_instance = RequestContext(request))
 
 
 def edit(request, commute_id):
