@@ -40,6 +40,6 @@ $(document).ready(function() {
             
             map.addControl(polygonControl);
             
-            $("#starttime").timepicker({stepMinute: 15,});
-            $("#endtime").timepicker({stepMinute: 15,});
+            $("#id_start_time").timepicker({stepMinute: 15,});
+            $("#id_end_time").timepicker({stepMinute: 15,});
     });
