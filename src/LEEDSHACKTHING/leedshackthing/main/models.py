@@ -52,7 +52,12 @@ class UserProfile(models.Model):
     phonenum = models.CharField(max_length=12, blank=True)
     twitter = models.CharField(max_length=50, blank=True)
     growlkey = models.CharField(max_length =41, blank=True)
+
+class CommuteChoice(models.Model):
+    description = models.CharField(max_length = 9)
     
+    def __unicode__(self):
+        return self.description
     
 class Commute(models.Model):
     
@@ -63,8 +68,12 @@ class Commute(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
     
+    day_choices = models.ManyToManyField(CommuteChoice)
+    
     def __unicode__(self):
         return self.name
+    
+    
     
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

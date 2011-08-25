@@ -41,15 +41,11 @@ $(document).ready(function() {
 
 <form action="." method="POST">
     {% csrf_token %}
-    <label for="name">Name: </label>
-    <input type="text" name="name" value = "{{ commute.name }}" /> <br />
-    <label for="starttime">Start Time: </label>
-    <input type="text" name="starttime" id="starttime" value = "{{ commute.start_time.isoformat }}"/><br />
-    <label for="endtime">End Time: </label>
-    <input type="text" name="endtime" id="endtime" value = "{{ commute.end_time.isoformat }}"/><br />
-    <input type="hidden" name="wkt" id="wkt" />
+    {{ form.as_p }}
     <input type="submit" value="Please Save My Commute" />
 </form>
+
+<div id="mapcontainer">
 
 <div id="map" class="smallmap"></div>
 
@@ -68,5 +64,7 @@ $(document).ready(function() {
                 <label for="polygonToggle">draw polygon</label>
             </li>
         </ul>
+        
+</div>
 
 {% endblock %}

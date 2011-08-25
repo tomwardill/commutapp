@@ -8,6 +8,7 @@ from django.contrib import messages
 from dateutil.parser import parse as date_parse
 
 from leedshackthing.main.models import Commute
+from leedshackthing.main.forms import CommuteForm
 
 
 def new(request):
@@ -16,42 +17,38 @@ def new(request):
     data = {}
     
     if request.method == 'POST':
+        form = CommuteForm(request.POST)
+        if form.is_valid():
 
-        c = Commute()
-        c.user = request.user
-        c.name = request.POST['name']
-        c.box = fromstr(request.POST['wkt'])
-        start_time = date_parse(request.POST['starttime']).time()
-        end_time = date_parse(request.POST['endtime']).time()
-        c.start_time = start_time
-        c.end_time = end_time
-        
-        c.save()
-        messages.success(request, 'New commute created.')
-        return HttpResponseRedirect(reverse('index'))
+            form.instance.user = request.user
+            form.instance.box = fromstr(request.POST['box'])
+            form.save()
+            messages.success(request, 'Commute created.')
+            return HttpResponseRedirect(reverse('index'))
+        data['form'] = form
+    else:
+        data['form'] = CommuteForm()
     
-    return render_to_response('commute-new.html', {}, context_instance = RequestContext(request))
+    return render_to_response('commute-new.html', data, context_instance = RequestContext(request))
 
 
 def edit(request, commute_id):
     
     
     commute = Commute.objects.get(id = commute_id)
+    form = CommuteForm(instance = commute)
     
     if request.method == 'POST':
 
-        c = commute
-        c.user = request.user
-        c.name = request.POST['name']
-        if request.POST['wkt']:
-            c.box = fromstr(request.POST['wkt'])
-        start_time = date_parse(request.POST['starttime']).time()
-        end_time = date_parse(request.POST['endtime']).time()
-        c.start_time = start_time
-        c.end_time = end_time
+        form = CommuteForm(request.POST, instance = commute)
+        if form.is_valid():
+
+            form.instance.user = request.user
+            form.instance.box = fromstr(request.POST['box'])
+            form.save()
+            messages.success(request, 'Commute edited.')
+            return HttpResponseRedirect(reverse('index'))
         
-        c.save()
-        messages.success(request, 'Commute edited.')
-        return HttpResponseRedirect(reverse('index'))
+
     
     return render_to_response('commute-new.html', locals(), context_instance = RequestContext(request))
