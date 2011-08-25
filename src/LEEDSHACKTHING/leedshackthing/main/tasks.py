@@ -123,25 +123,30 @@ def update_unplanned_events():
 def find_affected_commutes(time):
     """ Find all events that match"""
     
-    in_time = Commute.objects.filter(start_time__lt = time, end_time__gt = time)
+    in_time = Commute.objects.filter(start_time__lt = time, end_time__gt = time, day_choices__id = datetime.now().weekday())
     
     affected = []
+    # this is a bit nasty
+    # but filtering box__contains = point didn't seem to work
+    # TODO: check that again
     for event in UnplannedEvent.objects.all():
         for c in in_time:
             if c.box.contains(event.location):
                 a = AffectedCommute(c, event)
                 affected.append(a)
-    
+
     return affected
 
 @task()
 def notify_users():
     
     now = datetime.now().time()
-    commutes = find_affected_commutes.delay(now)
+    # This shouldn't be async, it'll not gain anything anyway
+    commutes = find_affected_commutes(now)
     
     for c in commutes:
 
+        print c
         profile = c.commute.user.get_profile()
         
         if profile.growlkey:
@@ -165,6 +170,7 @@ def sendEmail(recipient, message):
     
     e = email.Email()
     e.post(recipient, message)
+    print "email sent to: " + recipient
 
 @task()
 def sendTweet(recipient, message):
