@@ -7,7 +7,10 @@ function featureadded(feature) {
     $('#noneToggle')[0].checked = true;
     
     // set the hidden inputs for map boundaries
-    $('#wkt')[0].value = wkt.write(feature.feature);
+    console.log(feature.feature);
+    box_value = wkt.write(feature.feature);
+    console.log(box_value);
+    $('#id_box')[0].value = box_value;
 }
 
 function activate() {
