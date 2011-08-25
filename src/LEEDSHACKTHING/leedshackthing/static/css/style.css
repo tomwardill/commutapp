@@ -3,10 +3,6 @@
     height: 256px;
 }
 
-.smallmap * {
-    z-index: 0;
-}
-
 html { 
   padding:0px;
   margin:0px;
@@ -59,3 +55,4 @@ padding-left: 10px;
 a {
   text-decoration: none;
 }
+

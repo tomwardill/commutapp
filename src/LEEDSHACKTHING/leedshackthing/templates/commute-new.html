@@ -41,9 +41,11 @@ $(document).ready(function() {
 
 <form action="." method="POST">
     {% csrf_token %}
-    {{ form.as_div }}
+    {{ form.as_p }}
     <input type="submit" value="Please Save My Commute" />
 </form>
+
+<div id="mapcontainer">
 
 <div id="map" class="smallmap"></div>
 
@@ -62,5 +64,7 @@ $(document).ready(function() {
                 <label for="polygonToggle">draw polygon</label>
             </li>
         </ul>
+        
+</div>
 
 {% endblock %}
