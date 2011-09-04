@@ -23,8 +23,7 @@ def profile(request):
             user.last_name = request.POST["last_name"]
             user_profile.phonenum = request.POST["phonenum"]
             user_profile.growlkey = request.POST["growlkey"]
-            #user_profile.com_hours = request.POST["com_hours"]
-            #user.com_mins = request.POST["com_mins"]
+            user_profile.twitter = request.POST["twitter"]
             user.save()
             user_profile.save()
             messages.success(request, 'Profile details updated.')
