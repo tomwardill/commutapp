@@ -67,4 +67,9 @@ $(document).ready(function() {
         
 </div>
 
+<form action="." method = "POST">
+{% csrf_token %}
+<input type="submit" value = "Delete this commute" name="delete" />
+</form>
+
 {% endblock %}

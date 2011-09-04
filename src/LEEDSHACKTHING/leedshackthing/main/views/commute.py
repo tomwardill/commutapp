@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
@@ -39,6 +39,11 @@ def edit(request, commute_id):
     form = CommuteForm(instance = commute)
     
     if request.method == 'POST':
+        
+        # if the user has pressed the delete button
+        if request.POST.has_key('delete'):
+            # redirect to the delete confirmation
+            return HttpResponseRedirect(reverse('commute-delete', args = [commute.id]))
 
         form = CommuteForm(request.POST, instance = commute)
         if form.is_valid():
@@ -52,3 +57,19 @@ def edit(request, commute_id):
 
     
     return render_to_response('commute-new.html', locals(), context_instance = RequestContext(request))
+
+
+def delete(request, commute_id):
+    
+    commute = get_object_or_404(Commute, id = commute_id)
+    
+    if request.method == 'POST':
+        if request.POST.has_key('Delete'):
+            commute.delete()
+            messages.success(request, 'Commute deleted.')
+            return HttpResponseRedirect(reverse('index'))
+        if request.POST.has_key('NoDelete'):
+            return HttpResponseRedirect(reverse('commute-edit', args = [commute.id]))
+        
+    
+    return render_to_response('commute-delete.html', locals(), context_instance = RequestContext(request))
