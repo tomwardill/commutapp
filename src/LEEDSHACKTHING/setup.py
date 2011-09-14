@@ -16,9 +16,12 @@ setup(
     zip_safe = False,
     
     install_requires = [
-        'lxml',
-        'south',
-        'python-dateutil',
-        'tweepy'
+        'Django==1.3',
+        'lxml==2.3',
+        'south==0.7.3',
+        'python-dateutil==1.5',
+        'tweepy==1.7.1',
+        'celery==2.2.7',
+        'django-celery==2.2.7',
         ]
     )

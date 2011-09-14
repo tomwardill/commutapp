@@ -7,15 +7,13 @@ import operator
 from datetime import datetime
 
 from lxml import etree
-
 from django.contrib.gis.geos import Point
-from django.core.mail import send_mail
+from django.conf import settings
+from celery.task import task
+
 
 from models import CurrentRoadWorks, FutureRoadWorks, UnplannedEvent, Commute, AffectedCommute
-from django.conf import settings
-
-import pyrowl
-from leedshackthing.main.views.sms import SMS
+from notifications import pyrowl, twitter, email
 
 namespaces = {'datex': 'http://datex2.eu/schema/1_0/1_0', 'xsi': 'http://www.w3.org/2001/XMLSchema-instance', 'soapenv': 'http://schemas.xmlsoap.org/soap/envelope/', 'xsd': 'http://www.w3.org/2001/XMLSchema'}
 
@@ -44,6 +42,7 @@ def _get_time(time_string):
     """ Convert the string from the xml into a datetime """
     return date_parse(time_string)
 
+@task()
 def update_current_road():
     
     xml = _download_data(settings.DATA_URLS['currentroad'])
@@ -67,6 +66,7 @@ def update_current_road():
         
     return len(situations)
 
+@task()
 def update_future_road():
     
     xml = _download_data(settings.DATA_URLS['futureroad'])
@@ -91,6 +91,7 @@ def update_future_road():
         
     return len(situations)
 
+@task()
 def update_unplanned_events():
     
     xml = _download_data(settings.DATA_URLS['unplannedevent'])
@@ -118,41 +119,45 @@ def update_unplanned_events():
         
     return len(situations)
 
+@task()
 def find_affected_commutes(time):
     """ Find all events that match"""
     
-    in_time = Commute.objects.filter(start_time__lt = time, end_time__gt = time)
+    in_time = Commute.objects.filter(start_time__lt = time, end_time__gt = time, day_choices__id = datetime.now().weekday())
     
     affected = []
+    # this is a bit nasty
+    # but filtering box__contains = point didn't seem to work
+    # TODO: check that again
     for event in UnplannedEvent.objects.all():
         for c in in_time:
             if c.box.contains(event.location):
                 a = AffectedCommute(c, event)
                 affected.append(a)
-    
+
     return affected
 
+@task()
 def notify_users():
     
     now = datetime.now().time()
+    # This shouldn't be async, it'll not gain anything anyway
     commutes = find_affected_commutes(now)
     
     for c in commutes:
-        
-        try:
-            profile = c.commute.user.get_profile()
-        except:
-            continue
-        if profile.growlkey:
-            sendgrowl(profile.growlkey, "%s: %s" % (c.affector.impact, c.affector.small_description))
-        
-        # We don't have an SMS solution yet
-        #if profile.phonenum:
-        #    sendSMS(profile.phonenum, "%s: %s" % (c.affector.impact, c.affector.small_description))
-        
-        sendEmail(c.commute.user.email, c.affector.description)
-    
 
+        print c
+        profile = c.commute.user.get_profile()
+        
+        if profile.growlkey:
+            sendgrowl.delay(profile.growlkey, "%s: %s" % (c.affector.impact, c.affector.small_description))
+        
+        if profile.twitter:
+            sendTweet.delay(profile.twitter, "%s: %s" % (c.affector.impact, c.affector.small_description))
+        
+        sendEmail.delay(c.commute.user.email, c.affector.description)
+    
+@task()
 def sendgrowl(growlkey, message):
     
     growlkey = str(growlkey)
@@ -160,10 +165,15 @@ def sendgrowl(growlkey, message):
     p = pyrowl.Pyrowl(growlkey)
     p.push("commutapp", "Commutapp Update", message)
 
-def sendSMS(recipent, message):
-    s = SMS()
-    s.post(recipent, message)
-
+@task()
 def sendEmail(recipient, message):
     
-    send_mail('Commute Warning', message, 'warning@commutapp.com', [recipient])
+    e = email.Email()
+    e.post(recipient, message)
+    print "email sent to: " + recipient
+
+@task()
+def sendTweet(recipient, message):
+    
+    t = twitter.Twitter()
+    t.post(recipient, message)

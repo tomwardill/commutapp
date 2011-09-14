@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p>Are you sure you wish to delete the commute {{ commute.name }}?<p>
+
+<form action="." method="POST">
+{% csrf_token %}
+<input type="submit" name="Delete" value = "Delete"/>
+<input type="submit" name="NoDelete" value = "Do not delete" />
+</form>
+
+
+{% endblock content %}
