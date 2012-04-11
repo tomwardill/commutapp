@@ -132,10 +132,10 @@ CELERYBEAT_SCHEDULE = {
         "task": "leedshackthing.main.tasks.update_current_road",
         "schedule": timedelta(minutes = 15),
         },
-    "import-future-road": {
-        "task": "leedshackthing.main.tasks.update_future_road",
-        "schedule": timedelta(hours = 6),
-        },
+    #"import-future-road": {
+        #"task": "leedshackthing.main.tasks.update_future_road",
+        #"schedule": timedelta(hours = 6),
+        #},
     "import-unplanned-events": {
         "task": "leedshackthing.main.tasks.update_unplanned_events",
         "schedule": timedelta(minutes = 10),
