@@ -16,12 +16,12 @@ setup(
     zip_safe = False,
     
     install_requires = [
-        'Django==1.3',
+        'Django==1.4',
         'lxml==2.3',
-        'south==0.7.3',
+        'south>=0.7.3',
         'python-dateutil==1.5',
-        'tweepy==1.7.1',
-        'celery==2.2.7',
-        'django-celery==2.2.7',
+        'tweepy>=1.7.1',
+        'celery>=2.2.7',
+        'django-celery==2.5.1',
         ]
     )

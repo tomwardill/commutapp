@@ -20,9 +20,9 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'leedshack',                      # Or path to database file if using sqlite3.
-        'USER': 'leedshack',                      # Not used with sqlite3.
-        'PASSWORD': 'password',                  # Not used with sqlite3.
+        'NAME': 'commutapp',                      # Or path to database file if using sqlite3.
+        'USER': 'commutapp',                      # Not used with sqlite3.
+        'PASSWORD': 'commutapp',                  # Not used with sqlite3.
         'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -106,7 +106,8 @@ djcelery.setup_loader()
 ROOT_URLCONF = 'leedshackthing.urls'
 
 DATA_URLS = {
-    'currentroad': 'http://datex2.tistrafficinfo.com/England/CurrentPlanned/content.xml'
+    'currentroad': 'http://datex2.tistrafficinfo.com/England/CurrentPlanned/content.xml',
+    'unplannedevent': 'http://datex2.tistrafficinfo.com/England/UnplannedEvent/content.xml',
     }
 
 TRAFFIC_USERNAME = 'twardill'
