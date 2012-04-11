@@ -93,10 +93,21 @@ def update_future_road():
 
 @task()
 def update_unplanned_events():
+
+
     
     xml = _download_data(settings.DATA_URLS['unplannedevent'])
-    data = etree.fromstring(xml)
     
+    
+    situations = _analyse_data(xml)
+        
+    return len(situations)
+
+def _analyse_unplanned_data(xml):
+    """ Analyse the data downloaded by the unplanned event task
+    Extracted into a separate method for testing """
+    
+    data = etree.fromstring(xml)
     situations = data.xpath('//datex:situationRecord', namespaces = namespaces)
     
     # remove all existing RoadWorks
@@ -116,8 +127,7 @@ def update_unplanned_events():
         c.end_time = _get_time(situation.xpath('.//datex:overallEndTime', namespaces = namespaces)[0].text)
         
         c.save()
-        
-    return len(situations)
+    return situations
 
 @task()
 def find_affected_commutes(time):

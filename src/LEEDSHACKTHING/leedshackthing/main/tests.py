@@ -1,9 +1,11 @@
 from datetime import datetime
+import os
 
 from django.test import TestCase
 from django.contrib.gis.geos import Point
 
 from .models import UnplannedEvent
+from .tasks import _analyse_unplanned_data
 
 class UnplannedEventTests(TestCase):
     """ Simple tests to check that we can create and save an unplanned event """
@@ -54,5 +56,23 @@ class UnplannedEventTests(TestCase):
         self.assertEqual(retrieved.description, event.description)
         
     
-        
+class UnplannedEventTaskTests(TestCase):
+    """ Test the task of loading unplanned events from a known file """
     
+    def setUp(self):
+        # clean any stray events
+        UnplannedEvent.objects.all().delete()
+    
+    def test_reading(self):
+        
+        # load our test data from disk
+        xml = open(os.path.join(os.path.dirname(__file__), "fixtures/unplanned.xml")).read()
+        read_situations = _analyse_unplanned_data(xml)
+        
+        # check we read the right number from the xml data
+        self.assertEquals(len(read_situations), 4)
+        
+        # check that we saved the right number into the database
+        events = UnplannedEvent.objects.all()
+        
+        self.assertEquals(len(events), 4)
