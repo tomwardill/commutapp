@@ -44,6 +44,8 @@ class UnplannedEvent(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     
+    updated = models.BooleanField()
+    
     objects = models.GeoManager()
 
 
