@@ -64,10 +64,13 @@ class UnplannedEventTaskTests(TestCase):
         UnplannedEvent.objects.all().delete()
     
     def test_reading(self):
+        """ Load data from our test file. The data is stale, so it passes parameter to not expire the data"""
         
         # load our test data from disk
         xml = open(os.path.join(os.path.dirname(__file__), "fixtures/unplanned.xml")).read()
-        read_situations = _analyse_unplanned_data(xml)
+        
+        # False here, so we don't expire old data (as we need to test against it)
+        read_situations = _analyse_unplanned_data(xml, False)
         
         # check we read the right number from the xml data
         self.assertEquals(len(read_situations), 4)
@@ -76,3 +79,15 @@ class UnplannedEventTaskTests(TestCase):
         events = UnplannedEvent.objects.all()
         
         self.assertEquals(len(events), 4)
+        
+    def test_stale_expiry(self):
+        """ The data in our test file is old, so if you load it and expire the stale data, it should all be removed """
+        
+        # load our test data from disk
+        xml = open(os.path.join(os.path.dirname(__file__), "fixtures/unplanned.xml")).read()
+        read_situations = _analyse_unplanned_data(xml)
+
+        # there should now be no test data
+        events = UnplannedEvent.objects.all()
+        self.assertEquals(len(events), 0)
+               

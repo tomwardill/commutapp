@@ -93,40 +93,58 @@ def update_future_road():
 
 @task()
 def update_unplanned_events():
-
-
     
     xml = _download_data(settings.DATA_URLS['unplannedevent'])
-    
-    
     situations = _analyse_data(xml)
         
     return len(situations)
 
-def _analyse_unplanned_data(xml):
+def _analyse_unplanned_data(xml, expire_stale = True):
     """ Analyse the data downloaded by the unplanned event task
     Extracted into a separate method for testing """
+    
+    # first, mark all of our data as none-updated
+    UnplannedEvent.objects.all().update(updated = False)
     
     data = etree.fromstring(xml)
     situations = data.xpath('//datex:situationRecord', namespaces = namespaces)
     
-    # remove all existing RoadWorks
-    UnplannedEvent.objects.all().delete()
-    
     for situation in situations:
         c = UnplannedEvent()
         c.description = situation.xpath('./datex:nonGeneralPublicComment/datex:comment/datex:value', namespaces = namespaces)[0].text
-        latitude = situation.xpath('.//datex:latitude', namespaces = namespaces)[0].text
-        longitude = situation.xpath('.//datex:longitude', namespaces = namespaces)[0].text
-        c.location = Point(float(longitude), float(latitude))
         
         c.small_description = situation.xpath('.//datex:descriptor', namespaces = namespaces)[0].getchildren()[0].text
         c.impact = situation.xpath('.//datex:impactOnTraffic', namespaces = namespaces)[0].text
         
         c.start_time = _get_time(situation.xpath('.//datex:overallStartTime', namespaces = namespaces)[0].text)
-        c.end_time = _get_time(situation.xpath('.//datex:overallEndTime', namespaces = namespaces)[0].text)
+        c.end_time = _get_time(situation.xpath('.//datex:overallEndTime', namespaces = namespaces)[0].text)        
         
-        c.save()
+        latitude = situation.xpath('.//datex:latitude', namespaces = namespaces)[0].text
+        longitude = situation.xpath('.//datex:longitude', namespaces = namespaces)[0].text
+        final_location = Point(float(longitude), float(latitude))
+        
+        # check if we've already got this event
+        try:
+            existing = UnplannedEvent.objects.get(location = final_location, start_time = c.start_time)
+            # if we have, update it with new data
+            existing.end_time = c.end_time
+            existing.description = c.description
+            existing.small_description = c.small_description
+            existing.impact = c.impact
+            existing.updated = True
+            existing.save()
+        except:
+            # if we haven't, then it's a new event, we need to save it
+            c.location = final_location
+            c.updated = True
+            c.save()
+            
+            
+    # check for expired events and remove them
+    if expire_stale:
+        expired = UnplannedEvent.objects.filter(end_time__lte = datetime.now())
+        expired.delete()
+            
     return situations
 
 @task()
