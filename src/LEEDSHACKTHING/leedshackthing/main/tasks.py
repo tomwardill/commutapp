@@ -3,6 +3,7 @@ import base64
 from StringIO import StringIO
 import gzip
 from dateutil.parser import parse as date_parse
+import pytz
 import operator
 from datetime import datetime
 
@@ -95,7 +96,7 @@ def update_future_road():
 def update_unplanned_events():
     
     xml = _download_data(settings.DATA_URLS['unplannedevent'])
-    situations = _analyse_data(xml)
+    situations = _analyse_unplanned_data(xml)
         
     return len(situations)
 
@@ -111,6 +112,9 @@ def _analyse_unplanned_data(xml, expire_stale = True):
     
     for situation in situations:
         c = UnplannedEvent()
+        
+        c.xml_id = situation.attrib['id']
+        
         c.description = situation.xpath('./datex:nonGeneralPublicComment/datex:comment/datex:value', namespaces = namespaces)[0].text
         
         c.small_description = situation.xpath('.//datex:descriptor', namespaces = namespaces)[0].getchildren()[0].text
@@ -125,15 +129,18 @@ def _analyse_unplanned_data(xml, expire_stale = True):
         
         # check if we've already got this event
         try:
-            existing = UnplannedEvent.objects.get(location = final_location, start_time = c.start_time)
+            existing = UnplannedEvent.objects.get(xml_id=c.xml_id)
             # if we have, update it with new data
-            existing.end_time = c.end_time
-            existing.description = c.description
-            existing.small_description = c.small_description
-            existing.impact = c.impact
-            existing.updated = True
-            existing.save()
-        except:
+            
+            if (existing.end_time != c.end_time.replace(tzinfo=None)) or (existing.impact != c.impact):
+                existing.end_time = c.end_time
+                existing.description = c.description
+                existing.small_description = c.small_description
+                existing.impact = c.impact
+                existing.updated = True
+                existing.save()
+                    
+        except Exception, err:
             # if we haven't, then it's a new event, we need to save it
             c.location = final_location
             c.updated = True
@@ -151,17 +158,23 @@ def _analyse_unplanned_data(xml, expire_stale = True):
 def find_affected_commutes(time):
     """ Find all events that match"""
     
-    in_time = Commute.objects.filter(start_time__lt = time, end_time__gt = time, day_choices__id = datetime.now().weekday())
+    # get all the commutes that are within the time we want, are applicable today
+    in_time = Commute.objects.filter(start_time__lt = time, 
+                                     end_time__gt = time, 
+                                     day_choices__id = datetime.now().weekday())
     
     affected = []
     # this is a bit nasty
-    # but filtering box__contains = point didn't seem to work
-    # TODO: check that again
-    for event in UnplannedEvent.objects.all():
+    # but you can't filter a box by a queryset.
+    for event in UnplannedEvent.objects.filter(updated=True):
         for c in in_time:
             if c.box.contains(event.location):
                 a = AffectedCommute(c, event)
                 affected.append(a)
+                
+                # we're done, we need to say it's not updated
+                event.updated = False
+                event.save()
 
     return affected
 

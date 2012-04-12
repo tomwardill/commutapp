@@ -23,5 +23,6 @@ setup(
         'tweepy>=1.7.1',
         'celery>=2.2.7',
         'django-celery==2.5.1',
+        'pytz>=2012b',
         ]
     )

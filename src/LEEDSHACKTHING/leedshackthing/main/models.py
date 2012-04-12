@@ -37,6 +37,7 @@ class FutureRoadWorks(models.Model):
     
 class UnplannedEvent(models.Model):
     
+    xml_id = models.CharField(max_length=200)
     description = models.TextField()
     small_description = models.TextField()
     impact = models.TextField()

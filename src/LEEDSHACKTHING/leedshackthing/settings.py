@@ -140,6 +140,10 @@ CELERYBEAT_SCHEDULE = {
         "task": "leedshackthing.main.tasks.update_unplanned_events",
         "schedule": timedelta(minutes = 10),
         },
+    "notify-users": {
+        "task": "leedshackthing.main.tasks.notify_users",
+        "schedule": timedelta(minutes = 30),
+        },
     }
 
 
