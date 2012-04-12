@@ -1,11 +1,12 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 
 from django.test import TestCase
-from django.contrib.gis.geos import Point
+from django.contrib.gis.geos import Point, Polygon
+from django.contrib.auth.models import User
 
-from .models import UnplannedEvent
-from .tasks import _analyse_unplanned_data
+from .models import UnplannedEvent, Commute, CommuteChoice
+from .tasks import _analyse_unplanned_data, find_affected_commutes
 
 class UnplannedEventTests(TestCase):
     """ Simple tests to check that we can create and save an unplanned event """
@@ -91,3 +92,60 @@ class UnplannedEventTaskTests(TestCase):
         events = UnplannedEvent.objects.all()
         self.assertEquals(len(events), 0)
                
+               
+class CommuteTests(TestCase):
+    """ Test the commute notifications """
+    
+    def setUp(self):
+        """ We need some events to test with """
+        # first, clear any existing ones
+        UnplannedEvent.objects.all().delete()
+        
+        event = UnplannedEvent()
+        event.description = "CommuteTests unplanned event"
+        event.location = Point(51.5, -0.1275)
+        event.small_description = "CommuteTests"
+        event.impact = "minor"
+        event.updated = True
+        
+        event.start_time = datetime.now()
+        event.end_time = datetime.now() + timedelta(hours = 1)
+        
+        event.save()
+        
+        self.event_id = event.id
+        
+        # we also need to clear any existing commutes
+        Commute.objects.all().delete()
+        
+        # add the CommuteChoices we're going to need
+        for x in range(7):
+            cc = CommuteChoice()
+            cc.description = str(x)
+            cc.save()
+        
+        # we're also going to need a test user
+        self.user = User.objects.create_user("test", "test@example.com", "test")
+        self.user.save()
+        
+        
+    def test_match_commute(self):
+        """Test we can create a commute and match it to an event"""
+        
+        c = Commute()
+        c.box = Polygon(((-100, -100), (-100, 100), (100, 100), (-100, 100), (-100, -100)))
+        c.start_time = datetime.now()
+        c.end_time = datetime.now() + timedelta(minutes = 5)
+        c.user = self.user
+        c.save()
+        
+        for choice in [x[0] for x in CommuteChoice.objects.values_list("id")]:
+            c.day_choices.add(choice)
+        c.save()
+        
+        # find the affected commutes
+        affected = find_affected_commutes(datetime.now().time())
+        self.assertEqual(len(affected), 1)
+        
+        # check the event has been marked as not updated
+        self.assertFalse(UnplannedEvent.objects.get(id = self.event_id).updated)

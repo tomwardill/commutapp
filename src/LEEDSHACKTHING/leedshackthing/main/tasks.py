@@ -155,12 +155,12 @@ def _analyse_unplanned_data(xml, expire_stale = True):
     return situations
 
 @task()
-def find_affected_commutes(time):
+def find_affected_commutes(match_time):
     """ Find all events that match"""
     
     # get all the commutes that are within the time we want, are applicable today
-    in_time = Commute.objects.filter(start_time__lt = time, 
-                                     end_time__gt = time, 
+    in_time = Commute.objects.filter(start_time__lt = match_time, 
+                                     end_time__gt = match_time, 
                                      day_choices__id = datetime.now().weekday())
     
     affected = []
